@@ -17,20 +17,33 @@ import java.util.UUID;
 public class BeerController {
     private final BeerService beerService;
 
+    @PatchMapping("{beerId}")
+    public ResponseEntity<Void> updateBeerPatchById(@PathVariable("beerId") UUID beerId, @RequestBody Beer beer){
+        beerService.patchById(beerId, beer);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("{beerId}")
+    public ResponseEntity<Void> deleteById(@PathVariable("beerId") UUID beerId) {
+        beerService.deleteBeerById(beerId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     @PutMapping("{beerId}")
-    public ResponseEntity<Void> updateById(@PathVariable("beerId") UUID beerId, @RequestBody Beer beer){
-        beerService.updateBeerById(beerId,beer);
+    public ResponseEntity<Void> updateById(@PathVariable("beerId") UUID beerId, @RequestBody Beer beer) {
+        beerService.updateBeerById(beerId, beer);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> handlePost(@RequestBody Beer beer) {
-        Beer savedBeer = beerService.saveNewBeer(beer);
+        var savedBeer = beerService.saveNewBeer(beer);
 
-        HttpHeaders headers = new HttpHeaders();
-        String location = "/api/v1/beer/" + savedBeer.getId().toString();
+        var headers = new HttpHeaders();
+        var location = "/api/v1/beer/" + savedBeer.getId().toString();
         headers.add("Location", location);
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
@@ -44,6 +57,4 @@ public class BeerController {
     public Beer getBeerById(@PathVariable("beerId") UUID id) {
         return beerService.getBeerById(id);
     }
-
 }
-
