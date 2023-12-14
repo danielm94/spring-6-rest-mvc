@@ -46,7 +46,8 @@ public class BeerController {
         var savedBeer = beerService.saveNewBeer(beer);
 
         var headers = new HttpHeaders();
-        var location = BEER_PATH + "/" + savedBeer.getId().toString();
+        var location = BEER_PATH + "/" + savedBeer.getId()
+                                                  .toString();
         headers.add("Location", location);
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
@@ -54,6 +55,12 @@ public class BeerController {
     @GetMapping()
     public List<Beer> listBeers() {
         return beerService.listBeers();
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity handleNotFoundException() {
+        return ResponseEntity.notFound()
+                             .build();
     }
 
     @GetMapping(value = BEER_ID_PATH)
