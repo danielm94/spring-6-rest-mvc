@@ -1,6 +1,6 @@
 package guru.springframework.spring6restmvc.controller;
 
-import guru.springframework.spring6restmvc.model.Beer;
+import guru.springframework.spring6restmvc.model.BeerDTO;
 import guru.springframework.spring6restmvc.services.BeerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -21,7 +21,7 @@ public class BeerController {
     private final BeerService beerService;
 
     @PatchMapping(BEER_ID_PATH)
-    public ResponseEntity<Void> updateBeerPatchById(@PathVariable(BEER_ID) UUID beerId, @RequestBody Beer beer) {
+    public ResponseEntity<Void> updateBeerPatchById(@PathVariable(BEER_ID) UUID beerId, @RequestBody BeerDTO beer) {
         beerService.patchById(beerId, beer);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -35,14 +35,14 @@ public class BeerController {
     }
 
     @PutMapping(BEER_ID_PATH)
-    public ResponseEntity<Void> updateById(@PathVariable(BEER_ID) UUID beerId, @RequestBody Beer beer) {
+    public ResponseEntity<Void> updateById(@PathVariable(BEER_ID) UUID beerId, @RequestBody BeerDTO beer) {
         beerService.updateBeerById(beerId, beer);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping()
-    public ResponseEntity<Void> handlePost(@RequestBody Beer beer) {
+    public ResponseEntity<Void> handlePost(@RequestBody BeerDTO beer) {
         var savedBeer = beerService.saveNewBeer(beer);
 
         var headers = new HttpHeaders();
@@ -53,13 +53,13 @@ public class BeerController {
     }
 
     @GetMapping()
-    public List<Beer> listBeers() {
+    public List<BeerDTO> listBeers() {
         return beerService.listBeers();
     }
 
 
     @GetMapping(value = BEER_ID_PATH)
-    public Beer getBeerById(@PathVariable(BEER_ID) UUID id) {
+    public BeerDTO getBeerById(@PathVariable(BEER_ID) UUID id) {
         return beerService.getBeerById(id)
                           .orElseThrow(NotFoundException::new);
     }
